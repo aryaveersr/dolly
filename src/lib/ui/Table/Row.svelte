@@ -39,7 +39,8 @@
 
 		/* Visual cues for when the button is focused */
 		&:focus-within {
-			box-shadow: 0px 0px 0px 2px rgba(0, 0, 0, 0.1);
+			box-shadow: 0px 0px 0px 2px var(--gray-300);
+			background-color: var(--gray-200);
 		}
 	}
 

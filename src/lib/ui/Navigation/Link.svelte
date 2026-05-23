@@ -23,6 +23,7 @@
 
 		/* Spacing */
 		padding: 0.5rem;
+		padding-top: 1rem;
 
 		/* Border styles */
 		border-bottom: 2px solid transparent;
