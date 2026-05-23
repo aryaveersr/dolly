@@ -17,7 +17,7 @@
 					<Table.Row
 						{index}
 						onclick={() => console.log(entry.id, index)}
-						label="{entry.request.method} request to {entry.request.url.toString()}"
+						aria-label="{entry.request.method} request to {entry.request.url.toString()}"
 					>
 						<td>{entry.request.url.host}</td>
 						<td>{entry.request.url.pathname}</td>

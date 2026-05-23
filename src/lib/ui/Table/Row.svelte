@@ -3,13 +3,13 @@
 	import { getTableContext } from './context';
 
 	interface Props {
-		label?: string;
+		'aria-label'?: string;
 		onclick?: (ev: MouseEvent) => void;
 		index: number;
 		children: Snippet;
 	}
 
-	const { children, label, index, onclick }: Props = $props();
+	const { children, 'aria-label': ariaLabel, index, onclick }: Props = $props();
 	const { handleClick, handleKeyDown } = getTableContext();
 </script>
 
@@ -17,7 +17,7 @@
 	{@render children()}
 	<td>
 		<button
-			aria-label={label}
+			aria-label={ariaLabel}
 			tabindex="-1"
 			onkeydown={handleKeyDown}
 			onclick={(ev) => {
