@@ -19,7 +19,7 @@
 	a {
 		/* Override default styles */
 		text-decoration: none;
-		color: black;
+		color: var(--gray-600);
 
 		/* Spacing */
 		padding: 0.5rem;
@@ -28,11 +28,12 @@
 		border-bottom: 2px solid transparent;
 
 		&[data-active='false']:hover {
-			border-bottom-color: slategray;
+			border-bottom-color: var(--gray-500);
 		}
 
 		&[data-active='true'] {
-			border-bottom-color: black;
+			border-bottom-color: var(--gray-900);
+			color: var(--gray-900);
 		}
 	}
 </style>

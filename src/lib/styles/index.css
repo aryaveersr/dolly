@@ -1,3 +1,5 @@
+@import './tokens.css';
+
 /* Reset */
 
 *,
@@ -22,4 +24,10 @@ html {
 		'Open Sans',
 		'Helvetica Neue',
 		sans-serif;
+}
+
+/* Apply colors */
+body {
+	background-color: var(--gray-50);
+	color: var(--gray-900);
 }
