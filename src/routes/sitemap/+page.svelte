@@ -45,12 +45,12 @@
 							{@render renderItems(value.children)}
 						</Tree.Branch>
 					{:else}
-						<Tree.Item onclick={() => console.log(value.url)}>
+						<Tree.Leaf onclick={() => console.log(value.url)}>
 							<Link2 />
 							<span>
 								{key}
 							</span>
-						</Tree.Item>
+						</Tree.Leaf>
 					{/if}
 				{/each}
 			{/snippet}
