@@ -10,10 +10,15 @@
 
 	const { children, ...props }: Merge<Props, SvelteHTMLElements['ul']> = $props();
 
-	setTreeContext({ unselectCurrent: null });
+	let ul = $state<HTMLUListElement>();
+
+	setTreeContext({
+		getRoot: () => ul!,
+		unselectCurrent: null
+	});
 </script>
 
-<ul role="tree" {...props}>
+<ul bind:this={ul} role="tree" {...props}>
 	{@render children()}
 </ul>
 
