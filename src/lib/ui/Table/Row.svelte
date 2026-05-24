@@ -1,15 +1,16 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { getTableContext } from './context';
+	import type { Merge } from '$lib/utils/types';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	interface Props {
-		'aria-label'?: string;
 		onclick?: (ev: MouseEvent) => void;
 		index: number;
 		children: Snippet;
 	}
 
-	const { children, 'aria-label': ariaLabel, index, onclick }: Props = $props();
+	const { children, index, onclick, ...props }: Merge<Props, HTMLButtonAttributes> = $props();
 	const { handleClick, handleKeyDown } = getTableContext();
 </script>
 
@@ -17,13 +18,13 @@
 	{@render children()}
 	<td>
 		<button
-			aria-label={ariaLabel}
 			tabindex="-1"
 			onkeydown={handleKeyDown}
 			onclick={(ev) => {
 				handleClick(ev, index);
 				onclick?.(ev);
 			}}
+			{...props}
 		></button>
 	</td>
 </tr>
