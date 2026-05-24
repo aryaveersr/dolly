@@ -13,7 +13,7 @@
 			<Tree aria-labelledby="hosts">
 				{#each sitemap.entries.entries() as [key, value] (key)}
 					<Tree.Branch onclick={() => console.log(key)}>
-						{#snippet control(isOpen)}
+						{#snippet summary(isOpen)}
 							{#if isOpen}
 								<ChevronDown />
 							{:else}
@@ -32,7 +32,7 @@
 				{#each map.entries() as [key, value] (key)}
 					{#if value.kind == 'group'}
 						<Tree.Branch onclick={() => console.log(value.url)}>
-							{#snippet control(isOpen)}
+							{#snippet summary(isOpen)}
 								{#if isOpen}
 									<FolderOpen />
 								{:else}
