@@ -1,11 +1,17 @@
 import { source } from 'sveltekit-sse';
 import type { TrafficEntry } from '$lib/types/traffic';
 import type { SseEvent } from '$lib/types/event';
+import EventEmitter from 'eventemitter3';
 
-class Traffic {
+type TrafficStateEvent = {
+	push: (entry: TrafficEntry) => void;
+};
+
+class TrafficState extends EventEmitter<TrafficStateEvent> {
 	public entries = $state<TrafficEntry[]>([]);
 
 	constructor() {
+		super();
 		const channel = source('/api/events').select('message');
 		channel.json<SseEvent>().subscribe((event) => {
 			if (!event) return;
@@ -16,6 +22,7 @@ class Traffic {
 					id: event.id,
 					request: event.request
 				});
+				this.emit('push', this.entries[this.entries.length - 1]);
 			} else {
 				const index = this.entries.findIndex((entry) => entry.id === event.id);
 				this.entries[index] = {
@@ -28,4 +35,4 @@ class Traffic {
 	}
 }
 
-export default new Traffic();
+export default new TrafficState();
