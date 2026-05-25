@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Merge } from '$lib/utils/types';
-	import { setTreeContext } from './context';
+	import { setTreeContext } from '../context';
 	import type { Snippet } from 'svelte';
 	import type { SvelteHTMLElements } from 'svelte/elements';
 

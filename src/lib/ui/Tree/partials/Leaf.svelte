@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Node from './Node.svelte';
-	import { nextVisibleNode } from './utils';
+	import { nextVisibleNode } from '../utils';
 
 	interface Props {
 		children: Snippet;

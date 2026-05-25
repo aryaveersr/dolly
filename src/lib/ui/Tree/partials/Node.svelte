@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Merge } from '$lib/utils/types';
 	import type { SvelteHTMLElements } from 'svelte/elements';
-	import { getTreeContext } from './context';
+	import { getTreeContext } from '../context';
 	import { onMount, type Snippet } from 'svelte';
-	import { lastVisibleDescendant, lastVisibleNode } from './utils';
+	import { lastVisibleDescendant, lastVisibleNode } from '../utils';
 
 	interface Props {
 		children: Snippet;

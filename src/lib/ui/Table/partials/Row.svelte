@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-	import { getTableContext } from './context';
+	import { onMount, type Snippet } from 'svelte';
+	import { getTableContext } from '../context';
 	import type { Merge } from '$lib/utils/types';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 
@@ -25,6 +25,12 @@
 		if (ev.key === 'ArrowDown') tr.nextElementSibling?.querySelector('button')!.focus();
 		else if (ev.key === 'ArrowUp') tr.previousElementSibling?.querySelector('button')!.focus();
 	}
+
+	onMount(() => {
+		if (ctx.unselectCurrent) return;
+		ctx.unselectCurrent = () => (button.tabIndex = -1);
+		button.tabIndex = 0;
+	});
 </script>
 
 <tr bind:this={tr}>

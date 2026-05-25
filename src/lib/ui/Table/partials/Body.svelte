@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type Snippet } from 'svelte';
-	import { setTableContext } from './context';
+	import { setTableContext } from '../context';
 
 	interface Props {
 		children: Snippet;
