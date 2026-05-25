@@ -15,7 +15,6 @@
 			<Table.Body>
 				{#each traffic.entries as entry, index (entry.id)}
 					<Table.Row
-						{index}
 						onclick={() => console.log(entry.id, index)}
 						aria-label="{entry.request.method} request to {entry.request.url.toString()}"
 					>

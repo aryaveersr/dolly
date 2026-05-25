@@ -5,27 +5,32 @@
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	interface Props {
-		onclick?: (ev: MouseEvent) => void;
-		index: number;
 		children: Snippet;
+		onclick?: () => void;
 	}
 
-	const { children, index, onclick, ...props }: Merge<Props, HTMLButtonAttributes> = $props();
-	const { handleClick, handleKeyDown } = getTableContext();
+	const { children, onclick, ...props }: Merge<Props, HTMLButtonAttributes> = $props();
+	const ctx = getTableContext();
+
+	let tr: HTMLTableRowElement;
+	let button: HTMLButtonElement;
+
+	function onfocus() {
+		ctx.unselectCurrent?.();
+		ctx.unselectCurrent = () => (button.tabIndex = -1);
+		button.tabIndex = 0;
+	}
+
+	function onkeydown(ev: KeyboardEvent) {
+		if (ev.key === 'ArrowDown') tr.nextElementSibling?.querySelector('button')!.focus();
+		else if (ev.key === 'ArrowUp') tr.previousElementSibling?.querySelector('button')!.focus();
+	}
 </script>
 
-<tr>
+<tr bind:this={tr}>
 	{@render children()}
 	<td>
-		<button
-			tabindex="-1"
-			onkeydown={handleKeyDown}
-			onclick={(ev) => {
-				handleClick(ev, index);
-				onclick?.(ev);
-			}}
-			{...props}
-		></button>
+		<button bind:this={button} tabindex="-1" {onfocus} {onkeydown} {onclick} {...props}></button>
 	</td>
 </tr>
 
