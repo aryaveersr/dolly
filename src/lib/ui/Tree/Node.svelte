@@ -3,15 +3,22 @@
 	import type { SvelteHTMLElements } from 'svelte/elements';
 	import { getTreeContext } from './context';
 	import { onMount, type Snippet } from 'svelte';
+	import { lastVisibleDescendant, lastVisibleNode } from './utils';
 
 	interface Props {
 		children: Snippet;
 		rest?: Snippet;
 		onclick?: () => void;
-		onkeydown?: (ev: KeyboardEvent) => void;
+		handleKeydown?: (ev: KeyboardEvent, li: HTMLLIElement) => void;
 	}
 
-	const { children, rest, onclick, ...props }: Merge<Props, SvelteHTMLElements['li']> = $props();
+	const {
+		children,
+		rest,
+		onclick,
+		handleKeydown,
+		...props
+	}: Merge<Props, SvelteHTMLElements['li']> = $props();
 	const ctx = getTreeContext();
 
 	let li: HTMLLIElement;
@@ -28,21 +35,12 @@
 	}
 
 	function onkeydown(ev: KeyboardEvent) {
-		if (ev.key === 'Home') {
-			ctx.getRoot().children[0].querySelector('button')!.focus();
-		} else if (ev.key === 'End') {
-			let list = ctx.getRoot();
+		ev.preventDefault();
 
-			while (list.children[list.children.length - 1]?.ariaExpanded === 'true') {
-				list = list.children[list.children.length - 1]!.querySelector('ul')!;
-			}
-
-			(list.children[list.children.length - 1] ?? list.parentElement)
-				.querySelector('button')!
-				.focus();
-		} else {
-			props.onkeydown?.(ev);
-		}
+		if (ev.key === 'Home') ctx.getRoot().querySelector('button')!.focus();
+		else if (ev.key === 'End') lastVisibleDescendant(ctx.getRoot()).focus();
+		else if (ev.key === 'ArrowUp') lastVisibleNode(li)?.focus();
+		else handleKeydown?.(ev, li);
 	}
 
 	onMount(() => {

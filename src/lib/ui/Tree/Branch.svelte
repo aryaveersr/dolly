@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Node from './Node.svelte';
+	import { nextVisibleNode } from './utils';
 
 	interface Props {
 		summary: Snippet<[isOpen: boolean]>;
@@ -13,21 +14,24 @@
 	let ul: HTMLUListElement;
 	let isOpen = $state(false);
 
-	// function onkeydown(ev: KeyboardEvent) {
-	// if (ev.key === 'ArrowRight') {
-	// 	if (isOpen) ul.children[0]?.querySelector('button')!.focus();
-	// 	else isOpen = true;
-	// } else if (ev.key === 'ArrowLeft') {
-	// 	if (isOpen) isOpen = false;
-	// 	else if (li.parentElement?.role == 'group') {
-	// 		li.parentElement.parentElement!.querySelector('button')!.focus();
-	// 	}
-	// }
-	// }
+	function handleKeydown(ev: KeyboardEvent, li: HTMLLIElement) {
+		if (ev.key === 'ArrowRight') {
+			if (isOpen) ul.children[0]?.querySelector('button')!.focus();
+			else isOpen = true;
+		} else if (ev.key === 'ArrowLeft') {
+			if (isOpen) isOpen = false;
+			else li.parentElement!.closest('li[role="treeitem"]')?.querySelector('button')!.focus();
+		} else if (ev.key === 'ArrowDown') {
+			if (isOpen && ul.children[0]) ul.children[0].querySelector('button')!.focus();
+			else if (li.nextElementSibling) li.nextElementSibling.querySelector('button')!.focus();
+			else nextVisibleNode(li)?.focus();
+		}
+	}
 </script>
 
 <Node
 	aria-expanded={isOpen}
+	{handleKeydown}
 	onclick={() => {
 		isOpen = !isOpen;
 		onclick?.();
