@@ -4,7 +4,14 @@ import traffic from './traffic.svelte';
 import { SvelteMap } from 'svelte/reactivity';
 
 class SitemapState {
-	public entries: SvelteMap<string, Sitemap> = new SvelteMap();
+	public sitemaps: SvelteMap<string, Sitemap> = new SvelteMap();
+	public selectedUrl = $state<URL>();
+	public selectedEntries = $derived.by(() => {
+		if (!this.selectedUrl) return [];
+		return traffic.entries.filter((entry) =>
+			entry.request.url.href.startsWith(this.selectedUrl!.href)
+		);
+	});
 
 	constructor() {
 		traffic.on('push', (entry) => {
@@ -15,7 +22,8 @@ class SitemapState {
 	private addEntryToSitemap(entry: TrafficEntry) {
 		const segments = entry.request.url.pathname.split('/').filter(Boolean);
 		const usedSegments: string[] = [];
-		const sitemap = getOrInsert(this.entries, entry.request.url.hostname, {
+		const sitemap = getOrInsert(this.sitemaps, entry.request.url.hostname, {
+			url: new URL(entry.request.url.origin),
 			children: new SvelteMap<string, SiteItem>()
 		});
 

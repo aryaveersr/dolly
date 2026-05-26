@@ -4,20 +4,39 @@
 	import { ChevronDown, ChevronRight, Folder, FolderOpen, Link2 } from '@lucide/svelte';
 	import type { SiteItem } from '$lib/types/sitemap';
 	import type { SvelteMap } from 'svelte/reactivity';
+	import Table from '$lib/ui/Table';
 </script>
 
 <div class="container">
-	<div class="top">
-		<section class="sitemap">
-			<h2 id="hosts">Hosts</h2>
-			<Tree aria-labelledby="hosts">
-				{#each sitemap.entries.entries() as [key, value] (key)}
-					<Tree.Branch onclick={() => console.log(key)}>
+	<section class="sitemap">
+		<h2 id="hosts">Hosts</h2>
+		<Tree aria-labelledby="hosts">
+			{#each sitemap.sitemaps.entries() as [key, value] (key)}
+				<Tree.Branch onclick={() => (sitemap.selectedUrl = value.url)}>
+					{#snippet summary(isOpen)}
+						{#if isOpen}
+							<ChevronDown />
+						{:else}
+							<ChevronRight />
+						{/if}
+						<span>
+							{key}
+						</span>
+					{/snippet}
+					{@render renderItems(value.children)}
+				</Tree.Branch>
+			{/each}
+		</Tree>
+
+		{#snippet renderItems(map: SvelteMap<string, SiteItem>)}
+			{#each map.entries() as [key, value] (key)}
+				{#if value.kind == 'group'}
+					<Tree.Branch onclick={() => (sitemap.selectedUrl = value.url)}>
 						{#snippet summary(isOpen)}
 							{#if isOpen}
-								<ChevronDown />
+								<FolderOpen />
 							{:else}
-								<ChevronRight />
+								<Folder />
 							{/if}
 							<span>
 								{key}
@@ -25,43 +44,85 @@
 						{/snippet}
 						{@render renderItems(value.children)}
 					</Tree.Branch>
+				{:else}
+					<Tree.Leaf onclick={() => (sitemap.selectedUrl = value.url)}>
+						<Link2 />
+						<span>
+							{key}
+						</span>
+					</Tree.Leaf>
+				{/if}
+			{/each}
+		{/snippet}
+	</section>
+	<section class="entries">
+		<Table>
+			<Table.Head>
+				<th style:width="100%">Path</th>
+				<th style:width="5rem" class="center">Method</th>
+				<th style:width="5rem" class="center">Status</th>
+			</Table.Head>
+			<Table.Body>
+				{#each sitemap.selectedEntries as entry, index (entry.id)}
+					<Table.Row
+						onclick={() => console.log(entry.id, index)}
+						aria-label="{entry.request.method} request to {entry.request.url.toString()}"
+					>
+						<td>{entry.request.url.pathname + entry.request.url.search}</td>
+						<td class="center">{entry.request.method}</td>
+						<td class="center">
+							{#if entry.status == 'pending'}
+								Pending
+							{:else}
+								{entry.response.status}
+							{/if}
+						</td>
+					</Table.Row>
 				{/each}
-			</Tree>
-
-			{#snippet renderItems(map: SvelteMap<string, SiteItem>)}
-				{#each map.entries() as [key, value] (key)}
-					{#if value.kind == 'group'}
-						<Tree.Branch onclick={() => console.log(value.url)}>
-							{#snippet summary(isOpen)}
-								{#if isOpen}
-									<FolderOpen />
-								{:else}
-									<Folder />
-								{/if}
-								<span>
-									{key}
-								</span>
-							{/snippet}
-							{@render renderItems(value.children)}
-						</Tree.Branch>
-					{:else}
-						<Tree.Leaf onclick={() => console.log(value.url)}>
-							<Link2 />
-							<span>
-								{key}
-							</span>
-						</Tree.Leaf>
-					{/if}
-				{/each}
-			{/snippet}
-		</section>
-		<section class="entries"></section>
-	</div>
+			</Table.Body>
+		</Table>
+	</section>
 	<section class="viewer"></section>
 </div>
 
 <style>
-	.sitemap {
+	div.container {
+		/* Fill height */
+		height: 100%;
+
+		/* Grid layout */
+		display: grid;
+		grid-template-columns: 18rem auto;
+		grid-template-rows: minmax(0, 1fr) 20rem;
+
+		/* Spacing */
+		gap: 1rem;
+	}
+
+	section {
+		/* Spacing */
 		padding: 1rem;
+	}
+
+	section.entries {
+		/* Align it with sitemap's heading */
+		padding-top: 2rem;
+	}
+
+	td {
+		/* Force text to ellipsis */
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	/* Align status and method columns to center */
+	.center {
+		text-align: center;
+	}
+
+	/* Make the status and method smaller */
+	td.center {
+		font-size: 14px;
 	}
 </style>

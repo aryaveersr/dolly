@@ -8,11 +8,20 @@
 	const { children }: Props = $props();
 </script>
 
-<table>
-	{@render children()}
-</table>
+<div>
+	<table>
+		{@render children()}
+	</table>
+</div>
 
 <style>
+	div {
+		/* Make table scrollable */
+		height: 100%;
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
+
 	table {
 		/* Use fixed layout and fill available space */
 		table-layout: fixed;

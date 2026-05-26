@@ -9,6 +9,7 @@
 		children: Snippet;
 		rest?: Snippet;
 		onclick?: () => void;
+		onmousedown?: () => void;
 		handleKeydown?: (ev: KeyboardEvent, li: HTMLLIElement) => void;
 	}
 
@@ -16,6 +17,7 @@
 		children,
 		rest,
 		onclick,
+		onmousedown,
 		handleKeydown,
 		...props
 	}: Merge<Props, SvelteHTMLElements['li']> = $props();
@@ -51,7 +53,7 @@
 </script>
 
 <li bind:this={li} role="treeitem" aria-selected="false" {...props}>
-	<button bind:this={button} tabindex="-1" {onfocus} {onclick} {onkeydown}>
+	<button bind:this={button} tabindex="-1" {onfocus} {onclick} {onkeydown} {onmousedown}>
 		{@render children()}
 	</button>
 	{@render rest?.()}

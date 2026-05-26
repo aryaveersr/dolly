@@ -11,6 +11,7 @@
 
 	const { summary, children, onclick }: Props = $props();
 
+	let hadFocusBeforeClick = false;
 	let ul: HTMLUListElement;
 	let isOpen = $state(false);
 
@@ -32,8 +33,9 @@
 <Node
 	aria-expanded={isOpen}
 	{handleKeydown}
+	onmousedown={() => (hadFocusBeforeClick = ul.previousElementSibling!.matches(':focus'))}
 	onclick={() => {
-		isOpen = !isOpen;
+		isOpen = !(isOpen && hadFocusBeforeClick);
 		onclick?.();
 	}}
 >

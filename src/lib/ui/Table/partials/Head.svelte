@@ -16,12 +16,13 @@
 </thead>
 
 <style>
-	tr {
-		/* Background */
-		background-color: var(--gray-200);
-	}
-
 	tr :global(th) {
+		/* Sticky header */
+		position: sticky;
+		top: -4px;
+		z-index: 1;
+		background-color: var(--gray-200);
+
 		/* Spacing */
 		padding: 0.5rem;
 
