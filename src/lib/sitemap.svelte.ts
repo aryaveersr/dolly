@@ -5,12 +5,17 @@ import { SvelteMap } from 'svelte/reactivity';
 
 class SitemapState {
 	public sitemaps: SvelteMap<string, Sitemap> = new SvelteMap();
-	public selectedUrl = $state<URL>();
+	private selectedSiteItem = $state<{ url: URL; kind: 'endpoint' | 'group' }>();
 	public selectedEntries = $derived.by(() => {
-		if (!this.selectedUrl) return [];
-		return traffic.entries.filter((entry) =>
-			entry.request.url.href.startsWith(this.selectedUrl!.href)
+		if (!this.selectedSiteItem) return [];
+		const entries = traffic.entries.filter((entry) =>
+			entry.request.url.href.startsWith(this.selectedSiteItem!.url.href)
 		);
+		return this.selectedSiteItem.kind === 'group'
+			? entries
+			: entries.filter(
+					(entry) => entry.request.url.pathname === this.selectedSiteItem!.url.pathname
+				);
 	});
 
 	constructor() {
@@ -19,10 +24,18 @@ class SitemapState {
 		});
 	}
 
+	public selectSiteItem(item: SiteItem | Sitemap) {
+		this.selectedSiteItem = {
+			url: item.url,
+			kind: item.kind
+		};
+	}
+
 	private addEntryToSitemap(entry: TrafficEntry) {
 		const segments = entry.request.url.pathname.split('/').filter(Boolean);
 		const usedSegments: string[] = [];
 		const sitemap = getOrInsert(this.sitemaps, entry.request.url.hostname, {
+			kind: 'group',
 			url: new URL(entry.request.url.origin),
 			children: new SvelteMap<string, SiteItem>()
 		});

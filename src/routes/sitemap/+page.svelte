@@ -9,10 +9,10 @@
 
 <div class="container">
 	<section class="sitemap">
-		<h2 id="hosts">Hosts</h2>
+		<h3 id="hosts">Hosts</h3>
 		<Tree aria-labelledby="hosts">
 			{#each sitemap.sitemaps.entries() as [key, value] (key)}
-				<Tree.Branch onclick={() => (sitemap.selectedUrl = value.url)}>
+				<Tree.Branch onclick={() => sitemap.selectSiteItem(value)}>
 					{#snippet summary(isOpen)}
 						{#if isOpen}
 							<ChevronDown />
@@ -31,7 +31,7 @@
 		{#snippet renderItems(map: SvelteMap<string, SiteItem>)}
 			{#each map.entries() as [key, value] (key)}
 				{#if value.kind == 'group'}
-					<Tree.Branch onclick={() => (sitemap.selectedUrl = value.url)}>
+					<Tree.Branch onclick={() => sitemap.selectSiteItem(value)}>
 						{#snippet summary(isOpen)}
 							{#if isOpen}
 								<FolderOpen />
@@ -45,7 +45,7 @@
 						{@render renderItems(value.children)}
 					</Tree.Branch>
 				{:else}
-					<Tree.Leaf onclick={() => (sitemap.selectedUrl = value.url)}>
+					<Tree.Leaf onclick={() => sitemap.selectSiteItem(value)}>
 						<Link2 />
 						<span>
 							{key}
@@ -82,7 +82,6 @@
 			</Table.Body>
 		</Table>
 	</section>
-	<section class="viewer"></section>
 </div>
 
 <style>
@@ -93,7 +92,7 @@
 		/* Grid layout */
 		display: grid;
 		grid-template-columns: 18rem auto;
-		grid-template-rows: minmax(0, 1fr) 20rem;
+		grid-template-rows: minmax(0, 1fr);
 
 		/* Spacing */
 		gap: 1rem;
@@ -103,6 +102,20 @@
 		/* Spacing */
 		padding: 1rem;
 	}
+
+	/* Sitemap section*/
+
+	h3 {
+		/* Align with the tree */
+		padding-left: 1rem;
+	}
+
+	section.sitemap {
+		/* Allow vertical scrolling */
+		overflow-y: auto;
+	}
+
+	/* Entries table section */
 
 	section.entries {
 		/* Align it with sitemap's heading */

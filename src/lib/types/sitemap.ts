@@ -1,6 +1,7 @@
 import type { SvelteMap } from 'svelte/reactivity';
 
 export type Sitemap = {
+	kind: 'group';
 	url: URL;
 	children: SvelteMap<string, SiteItem>;
 };
