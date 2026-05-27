@@ -5,6 +5,7 @@ import EventEmitter from 'eventemitter3';
 
 type TrafficStateEvent = {
 	push: (entry: TrafficEntry) => void;
+	update: (entry: TrafficEntry & { status: 'success' }) => void;
 };
 
 class TrafficState extends EventEmitter<TrafficStateEvent> {
@@ -22,6 +23,7 @@ class TrafficState extends EventEmitter<TrafficStateEvent> {
 					id: event.id,
 					request: event.request
 				});
+
 				this.emit('push', this.entries[this.entries.length - 1]);
 			} else {
 				const index = this.entries.findIndex((entry) => entry.id === event.id);
@@ -30,6 +32,8 @@ class TrafficState extends EventEmitter<TrafficStateEvent> {
 					status: 'success',
 					response: event.response
 				};
+
+				this.emit('update', this.entries[index]);
 			}
 		});
 	}

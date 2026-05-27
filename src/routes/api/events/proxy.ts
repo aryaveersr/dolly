@@ -2,6 +2,7 @@ import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import { Proxy, type IContext, type ErrorCallback } from 'http-mitm-proxy';
 import type { SseEvent } from '$lib/types/event';
+import type { Body } from '$lib/types/http';
 
 type Callback = (event: SseEvent) => void;
 
@@ -51,7 +52,7 @@ class ProxyWrapper {
 					method: ctx.clientToProxyRequest.method!,
 					headers: ctx.clientToProxyRequest.headers as Record<string, string>,
 					url: ctxToUrl(ctx),
-					body: bufferToUint8Array(Buffer.concat(resChunks))
+					body: bufferToBody(Buffer.concat(resChunks))
 				}
 			});
 		});
@@ -64,7 +65,7 @@ class ProxyWrapper {
 				response: {
 					status: ctx.serverToProxyResponse!.statusCode!,
 					headers: ctx.serverToProxyResponse!.headers as Record<string, string>,
-					body: bufferToUint8Array(Buffer.concat(resChunks))
+					body: bufferToBody(Buffer.concat(resChunks))
 				}
 			});
 		});
@@ -85,8 +86,9 @@ class ProxyWrapper {
 	}
 }
 
-function bufferToUint8Array(buffer: Buffer): Uint8Array {
-	return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.length);
+function bufferToBody(buffer: Buffer): Body {
+	const data = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.length);
+	return { kind: 'raw', data };
 }
 
 function ctxToUrl(ctx: IContext): URL {

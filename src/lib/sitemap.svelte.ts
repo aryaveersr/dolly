@@ -1,16 +1,18 @@
 import type { TrafficEntry } from '$lib/types/traffic';
 import type { SiteGroup, SiteItem, Sitemap } from '$lib/types/sitemap';
-import traffic from './traffic.svelte';
+import traffic from '$lib/traffic.svelte';
 import { SvelteMap } from 'svelte/reactivity';
 
 class SitemapState {
 	public sitemaps: SvelteMap<string, Sitemap> = new SvelteMap();
-	private selectedSiteItem = $state<{ url: URL; kind: 'endpoint' | 'group' }>();
+
+	public selectedSiteItem = $state<{ url: URL; kind: 'endpoint' | 'group' }>();
 	public selectedEntries = $derived.by(() => {
 		if (!this.selectedSiteItem) return [];
 		const entries = traffic.entries.filter((entry) =>
 			entry.request.url.href.startsWith(this.selectedSiteItem!.url.href)
 		);
+
 		return this.selectedSiteItem.kind === 'group'
 			? entries
 			: entries.filter(
@@ -22,13 +24,6 @@ class SitemapState {
 		traffic.on('push', (entry) => {
 			this.addEntryToSitemap(entry);
 		});
-	}
-
-	public selectSiteItem(item: SiteItem | Sitemap) {
-		this.selectedSiteItem = {
-			url: item.url,
-			kind: item.kind
-		};
 	}
 
 	private addEntryToSitemap(entry: TrafficEntry) {

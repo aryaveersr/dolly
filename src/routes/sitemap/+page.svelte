@@ -2,9 +2,16 @@
 	import sitemap from '$lib/sitemap.svelte';
 	import Tree from '$lib/ui/Tree';
 	import { ChevronDown, ChevronRight, Folder, FolderOpen, Link2 } from '@lucide/svelte';
-	import type { SiteItem } from '$lib/types/sitemap';
+	import type { SiteItem, Sitemap } from '$lib/types/sitemap';
 	import type { SvelteMap } from 'svelte/reactivity';
 	import Table from '$lib/ui/Table';
+
+	function selectSiteItem(item: SiteItem | Sitemap) {
+		sitemap.selectedSiteItem = {
+			url: item.url,
+			kind: item.kind
+		};
+	}
 </script>
 
 <div class="container">
@@ -12,7 +19,7 @@
 		<h3 id="hosts">Hosts</h3>
 		<Tree aria-labelledby="hosts">
 			{#each sitemap.sitemaps.entries() as [key, value] (key)}
-				<Tree.Branch onclick={() => sitemap.selectSiteItem(value)}>
+				<Tree.Branch onclick={() => selectSiteItem(value)}>
 					{#snippet summary(isOpen)}
 						{#if isOpen}
 							<ChevronDown />
@@ -31,7 +38,7 @@
 		{#snippet renderItems(map: SvelteMap<string, SiteItem>)}
 			{#each map.entries() as [key, value] (key)}
 				{#if value.kind == 'group'}
-					<Tree.Branch onclick={() => sitemap.selectSiteItem(value)}>
+					<Tree.Branch onclick={() => selectSiteItem(value)}>
 						{#snippet summary(isOpen)}
 							{#if isOpen}
 								<FolderOpen />
@@ -45,7 +52,7 @@
 						{@render renderItems(value.children)}
 					</Tree.Branch>
 				{:else}
-					<Tree.Leaf onclick={() => sitemap.selectSiteItem(value)}>
+					<Tree.Leaf onclick={() => selectSiteItem(value)}>
 						<Link2 />
 						<span>
 							{key}
