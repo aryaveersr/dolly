@@ -77,8 +77,9 @@
 		text-align: center;
 	}
 
-	/* Make the status and method smaller */
+	/* Make the status and method smaller and monospace */
 	td.center {
 		font-size: 14px;
+		font-family: monospace;
 	}
 </style>

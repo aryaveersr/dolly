@@ -30,4 +30,8 @@
 		font-size: 14px;
 		font-weight: 500;
 	}
+
+	th {
+		width: 2.5rem;
+	}
 </style>

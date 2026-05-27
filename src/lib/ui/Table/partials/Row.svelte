@@ -3,6 +3,7 @@
 	import { getTableContext } from '../context';
 	import type { Merge } from '$lib/utils/types';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import { ChevronRight } from '@lucide/svelte';
 
 	interface Props {
 		children: Snippet;
@@ -36,7 +37,9 @@
 <tr bind:this={tr}>
 	{@render children()}
 	<td>
-		<button bind:this={button} tabindex="-1" {onfocus} {onkeydown} {onclick} {...props}></button>
+		<button bind:this={button} tabindex="-1" {onfocus} {onkeydown} {onclick} {...props}>
+			<ChevronRight />
+		</button>
 	</td>
 </tr>
 
@@ -56,12 +59,11 @@
 		}
 	}
 
-	button {
-		/* Position over the entire row */
-		position: absolute;
-		inset: 0;
-		content: '';
+	td {
+		padding: 0px !important;
+	}
 
+	button {
 		/* Reset styles */
 		background: none;
 		border: none;
@@ -69,5 +71,22 @@
 
 		/* Cursor change on hover */
 		cursor: pointer;
+
+		/* Center the icon */
+		display: grid;
+		place-items: center;
+
+		/* Icon styles */
+		& :global(.lucide) {
+			color: var(--gray-500);
+			width: 1.25rem;
+		}
+	}
+
+	button::after {
+		/* Position over the entire row */
+		position: absolute;
+		inset: 0;
+		content: '';
 	}
 </style>
