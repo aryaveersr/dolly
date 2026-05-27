@@ -1,6 +1,4 @@
 <script lang="ts">
-	import sitemap from '$lib/sitemap.svelte';
-	import viewer from '$lib/viewer.svelte';
 	import Tree from '$lib/ui/Tree';
 	import { ChevronDown, ChevronRight, Folder, FolderOpen, Link2 } from '@lucide/svelte';
 	import type { SiteItem, Sitemap } from '$lib/types/sitemap';
@@ -9,6 +7,11 @@
 	import type { TrafficEntry } from '$lib/types/traffic';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import { getSitemapContext } from '$lib/contexts/sitemap.svelte';
+	import { getViewerContext } from '$lib/contexts/viewer.svelte';
+
+	const sitemap = getSitemapContext();
+	const viewer = getViewerContext();
 
 	function selectSiteItem(item: SiteItem | Sitemap) {
 		sitemap.selectedSiteItem = {

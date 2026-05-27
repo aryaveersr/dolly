@@ -2,13 +2,14 @@ import { source } from 'sveltekit-sse';
 import type { TrafficEntry } from '$lib/types/traffic';
 import type { SseEvent } from '$lib/types/event';
 import EventEmitter from 'eventemitter3';
+import { createContext } from 'svelte';
 
 type TrafficStateEvent = {
 	push: (entry: TrafficEntry) => void;
 	update: (entry: TrafficEntry & { status: 'success' }) => void;
 };
 
-class TrafficState extends EventEmitter<TrafficStateEvent> {
+export class TrafficState extends EventEmitter<TrafficStateEvent> {
 	public entries = $state<TrafficEntry[]>([]);
 
 	constructor() {
@@ -39,4 +40,4 @@ class TrafficState extends EventEmitter<TrafficStateEvent> {
 	}
 }
 
-export default new TrafficState();
+export const [getTrafficContext, setTrafficContext] = createContext<TrafficState>();

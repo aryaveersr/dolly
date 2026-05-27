@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import traffic from '$lib/traffic.svelte';
 	import type { TrafficEntry } from '$lib/types/traffic';
 	import Table from '$lib/ui/Table';
-	import viewer from '$lib/viewer.svelte';
+	import { getViewerContext } from '$lib/contexts/viewer.svelte';
+	import { getTrafficContext } from '$lib/contexts/traffic.svelte';
+
+	const traffic = getTrafficContext();
+	const viewer = getViewerContext();
 
 	async function openEntry(entry: TrafficEntry) {
 		viewer.activeEntry = entry;

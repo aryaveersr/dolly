@@ -1,5 +1,7 @@
 <script lang="ts">
-	import viewer from '$lib/viewer.svelte';
+	import { getViewerContext } from '$lib/contexts/viewer.svelte';
+
+	const viewer = getViewerContext();
 </script>
 
 <pre>{JSON.stringify(viewer.activeEntry, null, 2)}</pre>

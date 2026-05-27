@@ -1,14 +1,17 @@
 import type { TrafficEntry } from '$lib/types/traffic';
 import type { SiteGroup, SiteItem, Sitemap } from '$lib/types/sitemap';
-import traffic from '$lib/traffic.svelte';
 import { SvelteMap } from 'svelte/reactivity';
+import { createContext } from 'svelte';
+import { getTrafficContext } from '$lib/contexts/traffic.svelte';
 
-class SitemapState {
+export class SitemapState {
 	public sitemaps: SvelteMap<string, Sitemap> = new SvelteMap();
 
 	public selectedSiteItem = $state<{ url: URL; kind: 'endpoint' | 'group' }>();
 	public selectedEntries = $derived.by(() => {
 		if (!this.selectedSiteItem) return [];
+		const traffic = getTrafficContext();
+
 		const entries = traffic.entries.filter((entry) =>
 			entry.request.url.href.startsWith(this.selectedSiteItem!.url.href)
 		);
@@ -21,6 +24,8 @@ class SitemapState {
 	});
 
 	constructor() {
+		const traffic = getTrafficContext();
+
 		traffic.on('push', (entry) => {
 			this.addEntryToSitemap(entry);
 		});
@@ -64,4 +69,4 @@ function getOrInsert<T>(map: SvelteMap<string, T>, key: string, value: T): T {
 	return map.get(key)!;
 }
 
-export default new SitemapState();
+export const [getSitemapContext, setSitemapContext] = createContext<SitemapState>();

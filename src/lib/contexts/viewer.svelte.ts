@@ -1,8 +1,9 @@
 import type { TrafficEntry } from '$lib/types/traffic';
 import type { JSONValue, ParsedBody, Body } from '$lib/types/body';
-import traffic from './traffic.svelte';
+import { createContext } from 'svelte';
+import { getTrafficContext } from '$lib/contexts/traffic.svelte';
 
-class ViewerState {
+export class ViewerState {
 	private _activeEntry = $state<TrafficEntry>();
 
 	get activeEntry(): TrafficEntry | undefined {
@@ -19,6 +20,8 @@ class ViewerState {
 	}
 
 	constructor() {
+		const traffic = getTrafficContext();
+
 		traffic.on('update', (entry) => {
 			if (!this._activeEntry || entry.id != this._activeEntry.id) return;
 			entry.response.body = parseBody(entry.response.body);
@@ -52,4 +55,4 @@ function parseBody(body: Body): ParsedBody {
 	return { kind: 'json', data: json };
 }
 
-export default new ViewerState();
+export const [getViewerContext, setViewerContext] = createContext<ViewerState>();

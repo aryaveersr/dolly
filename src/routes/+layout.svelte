@@ -1,13 +1,13 @@
 <script lang="ts">
 	import '$lib/styles/index.css';
 	import Navigation from '$lib/ui/Navigation';
+	import { setTrafficContext, TrafficState } from '$lib/contexts/traffic.svelte';
+	import { setSitemapContext, SitemapState } from '$lib/contexts/sitemap.svelte';
+	import { setViewerContext, ViewerState } from '$lib/contexts/viewer.svelte';
 
-	// eslint-disable-next-line
-	import traffic from '$lib/traffic.svelte';
-	// eslint-disable-next-line
-	import sitemap from '$lib/sitemap.svelte';
-	// eslint-disable-next-line
-	import viewer from '$lib/viewer.svelte';
+	setTrafficContext(new TrafficState());
+	setSitemapContext(new SitemapState());
+	setViewerContext(new ViewerState());
 
 	let { children } = $props();
 </script>

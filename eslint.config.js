@@ -30,5 +30,10 @@ export default defineConfig(
 				svelteConfig
 			}
 		}
+	},
+	{
+		rules: {
+			'svelte/prefer-svelte-reactivity': ['off']
+		}
 	}
 );
