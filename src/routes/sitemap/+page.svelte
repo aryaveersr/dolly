@@ -14,9 +14,9 @@
 	const viewer = getViewerContext();
 
 	function selectSiteItem(item: SiteItem | Sitemap) {
-		sitemap.selectedSiteItem = {
+		sitemap.selection = {
 			url: item.url,
-			kind: item.kind
+			kind: item.kind == 'group' ? 'partial' : 'exact'
 		};
 	}
 

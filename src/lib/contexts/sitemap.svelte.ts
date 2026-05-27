@@ -7,20 +7,18 @@ import { getTrafficContext } from '$lib/contexts/traffic.svelte';
 export class SitemapState {
 	public sitemaps: SvelteMap<string, Sitemap> = new SvelteMap();
 
-	public selectedSiteItem = $state<{ url: URL; kind: 'endpoint' | 'group' }>();
+	public selection = $state<{ url: URL; kind: 'partial' | 'exact' }>();
 	public selectedEntries = $derived.by(() => {
-		if (!this.selectedSiteItem) return [];
+		if (!this.selection) return [];
 		const traffic = getTrafficContext();
 
 		const entries = traffic.entries.filter((entry) =>
-			entry.request.url.href.startsWith(this.selectedSiteItem!.url.href)
+			entry.request.url.href.startsWith(this.selection!.url.href)
 		);
 
-		return this.selectedSiteItem.kind === 'group'
+		return this.selection.kind === 'partial'
 			? entries
-			: entries.filter(
-					(entry) => entry.request.url.pathname === this.selectedSiteItem!.url.pathname
-				);
+			: entries.filter((entry) => entry.request.url.pathname === this.selection!.url.pathname);
 	});
 
 	constructor() {
