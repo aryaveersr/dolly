@@ -1,6 +1,15 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import traffic from '$lib/traffic.svelte';
+	import type { TrafficEntry } from '$lib/types/traffic';
 	import Table from '$lib/ui/Table';
+	import viewer from '$lib/viewer.svelte';
+
+	async function openEntry(entry: TrafficEntry) {
+		viewer.activeEntry = entry;
+		await goto(resolve('/viewer'));
+	}
 </script>
 
 <section>
@@ -13,9 +22,9 @@
 				<th style:width="5rem" class="center">Status</th>
 			</Table.Head>
 			<Table.Body>
-				{#each traffic.entries as entry, index (entry.id)}
+				{#each traffic.entries as entry (entry.id)}
 					<Table.Row
-						onclick={() => console.log(entry.id, index)}
+						onclick={() => openEntry(entry)}
 						aria-label="{entry.request.method} request to {entry.request.url.toString()}"
 					>
 						<td>{entry.request.url.host}</td>

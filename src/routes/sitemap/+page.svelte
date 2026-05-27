@@ -1,16 +1,25 @@
 <script lang="ts">
 	import sitemap from '$lib/sitemap.svelte';
+	import viewer from '$lib/viewer.svelte';
 	import Tree from '$lib/ui/Tree';
 	import { ChevronDown, ChevronRight, Folder, FolderOpen, Link2 } from '@lucide/svelte';
 	import type { SiteItem, Sitemap } from '$lib/types/sitemap';
 	import type { SvelteMap } from 'svelte/reactivity';
 	import Table from '$lib/ui/Table';
+	import type { TrafficEntry } from '$lib/types/traffic';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
 	function selectSiteItem(item: SiteItem | Sitemap) {
 		sitemap.selectedSiteItem = {
 			url: item.url,
 			kind: item.kind
 		};
+	}
+
+	async function openEntry(entry: TrafficEntry) {
+		viewer.activeEntry = entry;
+		await goto(resolve('/viewer'));
 	}
 </script>
 
@@ -70,9 +79,9 @@
 				<th style:width="5rem" class="center">Status</th>
 			</Table.Head>
 			<Table.Body>
-				{#each sitemap.selectedEntries as entry, index (entry.id)}
+				{#each sitemap.selectedEntries as entry (entry.id)}
 					<Table.Row
-						onclick={() => console.log(entry.id, index)}
+						onclick={() => openEntry(entry)}
 						aria-label="{entry.request.method} request to {entry.request.url.toString()}"
 					>
 						<td>{entry.request.url.pathname + entry.request.url.search}</td>

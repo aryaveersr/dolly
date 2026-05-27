@@ -1,5 +1,5 @@
 import type { TrafficEntry } from '$lib/types/traffic';
-import type { ParsedBody, RawBody } from '$lib/types/http';
+import type { JSONValue, ParsedBody, Body } from '$lib/types/body';
 import traffic from './traffic.svelte';
 
 class ViewerState {
@@ -10,8 +10,8 @@ class ViewerState {
 	}
 
 	set activeEntry(entry: TrafficEntry) {
-		if (entry.request.body.kind == 'raw') entry.request.body = parseBody(entry.request.body);
-		if (entry.status == 'success' && entry.response.body.kind == 'raw') {
+		entry.request.body = parseBody(entry.request.body);
+		if (entry.status == 'success') {
 			entry.response.body = parseBody(entry.response.body);
 		}
 
@@ -21,14 +21,35 @@ class ViewerState {
 	constructor() {
 		traffic.on('update', (entry) => {
 			if (!this._activeEntry || entry.id != this._activeEntry.id) return;
-			if (entry.response.body.kind == 'raw') entry.response.body = parseBody(entry.response.body);
+			entry.response.body = parseBody(entry.response.body);
 			this._activeEntry = entry;
 		});
 	}
 }
 
-function parseBody(body: RawBody): ParsedBody {
-	return { kind: 'parsed' };
+function parseBody(body: Body): ParsedBody {
+	if (body.kind != 'raw') return body;
+
+	const bytes = Uint8Array.fromBase64(body.data);
+	const decoder = new TextDecoder('utf-8', { fatal: true });
+
+	let string: string;
+	try {
+		string = decoder.decode(bytes);
+	} catch {
+		return { kind: 'binary', data: bytes };
+	}
+
+	if (string == '') return { kind: 'empty' };
+
+	let json: JSONValue;
+	try {
+		json = JSON.parse(string);
+	} catch {
+		return { kind: 'string', data: string };
+	}
+
+	return { kind: 'json', data: json };
 }
 
 export default new ViewerState();

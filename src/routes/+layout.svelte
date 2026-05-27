@@ -2,6 +2,13 @@
 	import '$lib/styles/index.css';
 	import Navigation from '$lib/ui/Navigation';
 
+	// eslint-disable-next-line
+	import traffic from '$lib/traffic.svelte';
+	// eslint-disable-next-line
+	import sitemap from '$lib/sitemap.svelte';
+	// eslint-disable-next-line
+	import viewer from '$lib/viewer.svelte';
+
 	let { children } = $props();
 </script>
 
@@ -10,6 +17,7 @@
 		<Navigation>
 			<Navigation.Link href="/">Dashboard</Navigation.Link>
 			<Navigation.Link href="/sitemap">Sitemap</Navigation.Link>
+			<Navigation.Link href="/viewer">Viewer</Navigation.Link>
 		</Navigation>
 	</header>
 	<main>
