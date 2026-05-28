@@ -88,8 +88,23 @@ class ProxyWrapper {
 }
 
 function bufferToBody(buffer: Buffer): Body {
-	const data = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.length);
-	return { kind: 'raw', data: data.toBase64() };
+	if (buffer.length === 0) return { kind: 'empty' };
+	const decoder = new TextDecoder('utf-8', { fatal: true });
+
+	let string: string;
+	try {
+		string = decoder.decode(buffer);
+	} catch {
+		return { kind: 'binary', data: buffer.toString('base64') };
+	}
+
+	if (string === '') return { kind: 'empty' };
+
+	try {
+		return { kind: 'json', data: JSON.parse(string) };
+	} catch {
+		return { kind: 'string', data: string };
+	}
 }
 
 function ctxToUrl(ctx: IContext): URL {

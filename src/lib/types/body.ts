@@ -1,11 +1,4 @@
-export type Body = RawBody | ParsedBody;
-
-export interface RawBody {
-	kind: 'raw';
-	data: string;
-}
-
-export type ParsedBody = Empty | Binary | String | Json;
+export type Body = Empty | Binary | String | Json;
 
 export interface Empty {
 	kind: 'empty';
@@ -13,7 +6,7 @@ export interface Empty {
 
 export interface Binary {
 	kind: 'binary';
-	data: Uint8Array;
+	data: string;
 }
 
 export interface String {

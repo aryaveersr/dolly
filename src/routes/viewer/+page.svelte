@@ -30,6 +30,7 @@
 			<h3>Request</h3>
 			<div class="header-container">
 				<HeaderView headers={viewer.activeEntry!.request.headers} />
+				<pre>{JSON.stringify(viewer.activeEntry!.request.body, null, 2)}</pre>
 			</div>
 		</section>
 		<section>
@@ -37,6 +38,7 @@
 			{#if viewer.activeEntry!.status == 'success'}
 				<div class="header-container">
 					<HeaderView headers={viewer.activeEntry!.response.headers} />
+					<pre>{JSON.stringify(viewer.activeEntry!.response.body, null, 2)}</pre>
 				</div>
 			{/if}
 		</section>
