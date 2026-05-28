@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Body } from '$lib/types/body';
 	import Tabs from '$lib/ui/Tabs';
+	import JsonTree from '$lib/ui/JsonTree';
 
 	interface Props {
 		body: Body;
@@ -33,12 +34,12 @@
 		<Tabs>
 			<Tabs.List>
 				<Tabs.Trigger value="interactive">Interactive</Tabs.Trigger>
-				<Tabs.Trigger value="pretty">Pretty</Tabs.Trigger>
+				<Tabs.Trigger value="raw">Raw</Tabs.Trigger>
 			</Tabs.List>
 			<Tabs.Content value="interactive">
-				<pre>interactove</pre>
+				<JsonTree value={body.data} />
 			</Tabs.Content>
-			<Tabs.Content value="pretty">
+			<Tabs.Content value="raw">
 				<pre>{JSON.stringify(body.data, null, 2)}</pre>
 			</Tabs.Content>
 		</Tabs>
