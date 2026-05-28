@@ -19,39 +19,37 @@
 	}
 </script>
 
-<div class="header-view">
-	{#if selected}
-		<div class="detail">
-			<button type="button" onclick={clearSelection}>
-				<ChevronLeft />
-				Back
-			</button>
-			<label>
-				Key
-				<textarea readonly>{selected.key}</textarea>
-			</label>
-			<label>
-				Value
-				<textarea readonly>{selected.value}</textarea>
-			</label>
-		</div>
-	{:else}
-		<Table>
-			<Table.Head>
-				<th style:width="35%">Name</th>
-				<th style:width="65%">Value</th>
-			</Table.Head>
-			<Table.Body>
-				{#each Object.entries(headers) as [key, value] (key)}
-					<Table.Row onclick={() => selectHeader(key, value)} aria-label="{key} header">
-						<td>{key}</td>
-						<td>{value}</td>
-					</Table.Row>
-				{/each}
-			</Table.Body>
-		</Table>
-	{/if}
-</div>
+{#if selected}
+	<div class="detail">
+		<button type="button" onclick={clearSelection}>
+			<ChevronLeft />
+			Back
+		</button>
+		<label>
+			Key
+			<textarea readonly>{selected.key}</textarea>
+		</label>
+		<label>
+			Value
+			<textarea readonly>{selected.value}</textarea>
+		</label>
+	</div>
+{:else}
+	<Table>
+		<Table.Head>
+			<th style:width="35%">Name</th>
+			<th style:width="65%">Value</th>
+		</Table.Head>
+		<Table.Body>
+			{#each Object.entries(headers) as [key, value] (key)}
+				<Table.Row onclick={() => selectHeader(key, value)} aria-label="{key} header">
+					<td>{key}</td>
+					<td>{value}</td>
+				</Table.Row>
+			{/each}
+		</Table.Body>
+	</Table>
+{/if}
 
 <style>
 	td {

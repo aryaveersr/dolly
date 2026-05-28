@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BodyView from '$lib/components/BodyView.svelte';
 	import HeaderView from '$lib/components/HeaderView.svelte';
 	import { getViewerContext } from '$lib/contexts/viewer.svelte';
 
@@ -6,7 +7,7 @@
 </script>
 
 <div class="container">
-	<header class="info">
+	<header>
 		<code>
 			{#if viewer.entry}
 				{viewer.entry.request.method}
@@ -28,17 +29,21 @@
 	{#if viewer.entry}
 		<section>
 			<h3>Request</h3>
-			<div class="header-container">
+			<div class="scroll">
 				<HeaderView headers={viewer.entry.request.headers} />
-				<pre>{JSON.stringify(viewer.entry.request.body, null, 2)}</pre>
+			</div>
+			<div class="scroll">
+				<BodyView body={viewer.entry.request.body} />
 			</div>
 		</section>
 		<section>
 			<h3>Response</h3>
 			{#if viewer.entry.status == 'success'}
-				<div class="header-container">
+				<div class="scroll">
 					<HeaderView headers={viewer.entry.response.headers} />
-					<pre>{JSON.stringify(viewer.entry.response.body, null, 2)}</pre>
+				</div>
+				<div class="scroll">
+					<BodyView body={viewer.entry.response.body} />
 				</div>
 			{/if}
 		</section>
@@ -47,9 +52,13 @@
 
 <style>
 	div.container {
+		/* Fill available space */
+		width: 100%;
+		height: 100%;
+
 		/* Grid layout */
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 		grid-template-rows: auto minmax(0, 1fr);
 
 		/* Spacing */
@@ -71,12 +80,19 @@
 		border-bottom: 1px solid #ccc;
 	}
 
-	div.header-container {
+	section {
 		/* Limit height to 50% */
-		height: 50%;
+		height: 100%;
 
+		/* Grid layout */
+		display: grid;
+		grid-template-rows:
+			minmax(min-content, max-content)
+			1fr 1fr;
+	}
+
+	div.scroll {
 		/* Allow scrolling */
-		overflow: auto;
-		min-height: 0;
+		overflow-y: auto;
 	}
 </style>
