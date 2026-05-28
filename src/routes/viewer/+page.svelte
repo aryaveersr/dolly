@@ -1,10 +1,11 @@
 <script lang="ts">
+	import HeaderView from '$lib/components/HeaderView.svelte';
 	import { getViewerContext } from '$lib/contexts/viewer.svelte';
 
 	const viewer = getViewerContext();
 </script>
 
-<div>
+<div class="container">
 	<header class="info">
 		<code>
 			{#if viewer.activeEntry}
@@ -24,16 +25,26 @@
 			{/if}
 		</code>
 	</header>
-	<section>
-		<h3>Request</h3>
-	</section>
-	<section>
-		<h3>Response</h3>
-	</section>
+	{#if viewer.activeEntry}
+		<section>
+			<h3>Request</h3>
+			<div class="header-container">
+				<HeaderView headers={viewer.activeEntry!.request.headers} />
+			</div>
+		</section>
+		<section>
+			<h3>Response</h3>
+			{#if viewer.activeEntry!.status == 'success'}
+				<div class="header-container">
+					<HeaderView headers={viewer.activeEntry!.response.headers} />
+				</div>
+			{/if}
+		</section>
+	{/if}
 </div>
 
 <style>
-	div {
+	div.container {
 		/* Grid layout */
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -56,5 +67,9 @@
 		/* Styling */
 		padding-bottom: 0.5rem;
 		border-bottom: 1px solid #ccc;
+	}
+
+	div.header-container {
+		height: 50%;
 	}
 </style>

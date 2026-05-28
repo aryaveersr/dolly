@@ -29,6 +29,5 @@
 
 		/* Border */
 		border-collapse: collapse;
-		border: 2px solid var(--gray-200);
 	}
 </style>

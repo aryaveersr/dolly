@@ -63,6 +63,9 @@
 		/* Set overflow behavior */
 		overflow-x: hidden;
 		overflow-y: auto;
+
+		/* Border */
+		border: 2px solid var(--gray-200);
 	}
 
 	td {
