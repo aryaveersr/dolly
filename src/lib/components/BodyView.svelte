@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Body } from '$lib/types/body';
+	import Tabs from '$lib/ui/Tabs';
 
 	interface Props {
 		body: Body;
@@ -29,22 +30,25 @@
 	{:else if body.kind == 'string'}
 		<pre>{body.data}</pre>
 	{:else if body.kind == 'json'}
-		<pre>{JSON.stringify(body.data, null, 2)}</pre>
+		<Tabs>
+			<Tabs.List>
+				<Tabs.Trigger value="interactive">Interactive</Tabs.Trigger>
+				<Tabs.Trigger value="pretty">Pretty</Tabs.Trigger>
+			</Tabs.List>
+			<Tabs.Content value="interactive">
+				<pre>interactove</pre>
+			</Tabs.Content>
+			<Tabs.Content value="pretty">
+				<pre>{JSON.stringify(body.data, null, 2)}</pre>
+			</Tabs.Content>
+		</Tabs>
 	{/if}
 </div>
 
 <style>
-	div {
-		position: relative;
-	}
-
 	header {
 		/* Take available width */
 		width: 100%;
-
-		/* Sticky */
-		position: sticky;
-		top: 0;
 
 		/* Layout */
 		display: flex;
