@@ -70,6 +70,11 @@
 	}
 
 	div.header-container {
+		/* Limit height to 50% */
 		height: 50%;
+
+		/* Allow scrolling */
+		overflow: auto;
+		min-height: 0;
 	}
 </style>
