@@ -10,7 +10,7 @@
 	const viewer = getViewerContext();
 
 	async function openEntry(entry: TrafficEntry) {
-		viewer.activeEntry = entry;
+		viewer.entry = entry;
 		await goto(resolve('/viewer'));
 	}
 </script>
@@ -23,7 +23,7 @@
 			<th style:width="5rem" class="center">Status</th>
 		</Table.Head>
 		<Table.Body>
-			{#each sitemap.selectedEntries as entry (entry.id)}
+			{#each sitemap.entries as entry (entry.id)}
 				<Table.Row
 					onclick={() => openEntry(entry)}
 					aria-label="{entry.request.method} request to {entry.request.url.toString()}"

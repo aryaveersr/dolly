@@ -15,28 +15,30 @@ export class TrafficState extends EventEmitter<TrafficStateEvent> {
 	constructor() {
 		super();
 		const channel = source('/api/events').select('message');
-		channel.json<SseEvent>().subscribe((event) => {
-			if (!event) return;
-			if (event.kind == 'request') {
-				event.request.url = new URL(event.request.url);
-				this.entries.push({
-					status: 'pending',
-					id: event.id,
-					request: event.request
-				});
+		channel.json<SseEvent>().subscribe((event) => this.handleSse(event));
+	}
 
-				this.emit('push', this.entries[this.entries.length - 1]);
-			} else {
-				const index = this.entries.findIndex((entry) => entry.id === event.id);
-				this.entries[index] = {
-					...this.entries[index],
-					status: 'success',
-					response: event.response
-				};
+	private handleSse(event: SseEvent | null) {
+		if (!event) return;
+		if (event.kind == 'request') {
+			event.request.url = new URL(event.request.url);
+			this.entries.push({
+				status: 'pending',
+				id: event.id,
+				request: event.request
+			});
 
-				this.emit('update', this.entries[index]);
-			}
-		});
+			this.emit('push', this.entries[this.entries.length - 1]);
+		} else {
+			const index = this.entries.findIndex((entry) => entry.id === event.id);
+			this.entries[index] = {
+				...this.entries[index],
+				status: 'success',
+				response: event.response
+			};
+
+			this.emit('update', this.entries[index]);
+		}
 	}
 }
 

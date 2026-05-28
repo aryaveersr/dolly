@@ -10,7 +10,7 @@
 	const viewer = getViewerContext();
 
 	async function openEntry(entry: TrafficEntry) {
-		viewer.activeEntry = entry;
+		viewer.entry = entry;
 		await goto(resolve('/viewer'));
 	}
 </script>

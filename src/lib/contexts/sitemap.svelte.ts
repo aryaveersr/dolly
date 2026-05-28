@@ -8,7 +8,7 @@ export class SitemapState {
 	public sitemaps: SvelteMap<string, Sitemap> = new SvelteMap();
 
 	public selection = $state<{ url: URL; kind: 'partial' | 'exact' }>();
-	public selectedEntries = $derived.by(() => {
+	public entries = $derived.by(() => {
 		if (!this.selection) return [];
 		const traffic = getTrafficContext();
 
@@ -23,13 +23,10 @@ export class SitemapState {
 
 	constructor() {
 		const traffic = getTrafficContext();
-
-		traffic.on('push', (entry) => {
-			this.addEntryToSitemap(entry);
-		});
+		traffic.on('push', (entry) => this.addEntry(entry));
 	}
 
-	private addEntryToSitemap(entry: TrafficEntry) {
+	private addEntry(entry: TrafficEntry) {
 		const segments = entry.request.url.pathname.split('/').filter(Boolean);
 		const usedSegments: string[] = [];
 		const sitemap = getOrInsert(this.sitemaps, entry.request.url.hostname, {

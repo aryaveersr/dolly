@@ -8,37 +8,37 @@
 <div class="container">
 	<header class="info">
 		<code>
-			{#if viewer.activeEntry}
-				{viewer.activeEntry.request.method}
-				{viewer.activeEntry.request.url.pathname}
+			{#if viewer.entry}
+				{viewer.entry.request.method}
+				{viewer.entry.request.url.pathname}
 			{:else}
 				No entry open in viewer.
 			{/if}
 		</code>
 		<code>
-			{#if viewer.activeEntry}
-				{#if viewer.activeEntry.status == 'pending'}
+			{#if viewer.entry}
+				{#if viewer.entry.status == 'pending'}
 					Pending
 				{:else}
-					Success - {viewer.activeEntry.response.status}
+					Success - {viewer.entry.response.status}
 				{/if}
 			{/if}
 		</code>
 	</header>
-	{#if viewer.activeEntry}
+	{#if viewer.entry}
 		<section>
 			<h3>Request</h3>
 			<div class="header-container">
-				<HeaderView headers={viewer.activeEntry!.request.headers} />
-				<pre>{JSON.stringify(viewer.activeEntry!.request.body, null, 2)}</pre>
+				<HeaderView headers={viewer.entry.request.headers} />
+				<pre>{JSON.stringify(viewer.entry.request.body, null, 2)}</pre>
 			</div>
 		</section>
 		<section>
 			<h3>Response</h3>
-			{#if viewer.activeEntry!.status == 'success'}
+			{#if viewer.entry.status == 'success'}
 				<div class="header-container">
-					<HeaderView headers={viewer.activeEntry!.response.headers} />
-					<pre>{JSON.stringify(viewer.activeEntry!.response.body, null, 2)}</pre>
+					<HeaderView headers={viewer.entry.response.headers} />
+					<pre>{JSON.stringify(viewer.entry.response.body, null, 2)}</pre>
 				</div>
 			{/if}
 		</section>
