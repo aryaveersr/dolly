@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Body } from '$lib/types/body';
 	import Tabs from '$lib/ui/Tabs';
-	import JsonTree from '$lib/ui/JsonTree';
+	import JsonTree from '$lib/components/JsonTree';
 
 	interface Props {
 		body: Body;
