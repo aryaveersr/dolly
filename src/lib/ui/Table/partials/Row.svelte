@@ -13,31 +13,38 @@
 	const { children, onclick, ...props }: Merge<Props, HTMLButtonAttributes> = $props();
 	const ctx = getTableContext();
 
-	let tr: HTMLTableRowElement;
+	let index = $state<number>(-1);
 	let button: HTMLButtonElement;
 
-	function onfocus() {
-		ctx.unselectCurrent?.();
-		ctx.unselectCurrent = () => (button.tabIndex = -1);
-		button.tabIndex = 0;
-	}
-
 	function onkeydown(ev: KeyboardEvent) {
-		if (ev.key === 'ArrowDown') tr.nextElementSibling?.querySelector('button')!.focus();
-		else if (ev.key === 'ArrowUp') tr.previousElementSibling?.querySelector('button')!.focus();
+		if (ev.key === 'ArrowDown') {
+			ctx.selected = (ctx.selected + 1) % ctx.counter;
+			ev.preventDefault();
+		} else if (ev.key === 'ArrowUp') {
+			ctx.selected = (ctx.selected - 1 + ctx.counter) % ctx.counter;
+			ev.preventDefault();
+		}
 	}
 
-	onMount(() => {
-		if (ctx.unselectCurrent) return;
-		ctx.unselectCurrent = () => (button.tabIndex = -1);
-		button.tabIndex = 0;
+	onMount(() => (index = ctx.counter++));
+	$effect(() => {
+		if (ctx.selected === index) button.focus();
 	});
 </script>
 
-<tr bind:this={tr}>
+<tr>
 	{@render children()}
 	<td>
-		<button bind:this={button} tabindex="-1" {onfocus} {onkeydown} {onclick} {...props}>
+		<button
+			bind:this={button}
+			tabindex={ctx.selected === index ? 0 : -1}
+			{onkeydown}
+			onclick={() => {
+				ctx.selected = index;
+				onclick?.();
+			}}
+			{...props}
+		>
 			<ChevronRight />
 		</button>
 	</td>

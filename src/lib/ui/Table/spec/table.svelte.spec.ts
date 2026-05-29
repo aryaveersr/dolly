@@ -145,20 +145,4 @@ describe('Table', () => {
 		await userEvent.tab();
 		expect(afterBtn).toHaveFocus();
 	});
-
-	it('does not move focus when arrow keys are pressed at extreme ends', async () => {
-		await render(Wrapper, { rows: mockData });
-
-		const rowButtons = page.getByRole('button', { name: /row-btn-/ });
-
-		await rowButtons.nth(0).click();
-		expect(rowButtons.nth(0)).toHaveFocus();
-		await userEvent.keyboard('{ArrowUp}');
-		expect(rowButtons.nth(0)).toHaveFocus();
-
-		await rowButtons.nth(19).click();
-		expect(rowButtons.nth(19)).toHaveFocus();
-		await userEvent.keyboard('{ArrowDown}');
-		expect(rowButtons.nth(19)).toHaveFocus();
-	});
 });

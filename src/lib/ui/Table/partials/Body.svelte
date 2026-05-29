@@ -8,7 +8,8 @@
 
 	const { children }: Props = $props();
 
-	setTableContext({ unselectCurrent: null });
+	let ctx = $state({ selected: 0, counter: 0 });
+	setTableContext(ctx);
 </script>
 
 <tbody>
